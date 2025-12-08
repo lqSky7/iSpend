@@ -56,18 +56,32 @@ struct Sheet : View {
     }
 }
 
-@Observable
-class User {
-    var name: String = "hii"
+struct User : Encodable{
+    var name: String
+    var lastName: String
 }
 
 struct ContentView: View {
     @State private var showingSecondSheet = false
-    @State var user1: User = User()
+    @State var user1: User = User(name: "D", lastName: "S" )
     var body: some View {
         VStack {
             Text("\(user1.name) bye")
-            TextField("the name is: ",text: $user1.name)
+            TextField("the name is: ",text: $user1.lastName)
+            
+            Button("SAVE DETAILS", role: .confirm){
+                
+                let encoder : JSONEncoder = JSONEncoder()  // it is a type of itself...
+                
+                if let data = try? encoder.encode(user1) {
+                    UserDefaults.standard.set(data, forKey: "KEY1")
+                }
+                
+            }.buttonStyle(.glassProminent)
+                .glassEffect(.regular.interactive())
+                .tint(.black)
+            
+            
             Button("SHOW SECOND SHEET"){
                 showingSecondSheet.toggle()
             }
