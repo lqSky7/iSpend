@@ -9,17 +9,49 @@ import SwiftUI
 
 
 struct Sheet : View {
+    @State private var counter = 1
+    @State private var liss: [Int] = []
     @Environment(\.dismiss) var diss
     let name: String
     var body : some View {
-        
-
-        Text("Secpnd sheet")
-        Text("hiiiiiï \(name)")
-        Button("DISMISS", role: .destructive){
-            diss()
-        }.buttonStyle(.glassProminent)
-        .glassEffect(.regular.interactive())
+        NavigationStack{
+            VStack{
+                List {
+                    ForEach(liss, id: \.self) {
+                        num in
+                        Text("ROW \(num)")
+                    }
+                    .onDelete(perform: delRo)
+                }
+                
+                Button("ADDRO", role: .confirm){
+                    addro()
+                }.buttonStyle(.glassProminent)
+                    .glassEffect(.regular.interactive())
+                
+                Button("DISMISS", role: .destructive){
+                    diss()
+                }.buttonStyle(.glassProminent)
+                    .glassEffect(.regular.interactive())
+            }.toolbar{
+                
+                        Button("First") {}
+                      
+                    EditButton()}
+                    
+                
+                    
+            
+        }
+       
+    }
+    func addro(){
+        liss.append(counter)
+        counter += 1
+    }
+    
+    func delRo(at hi : IndexSet) {
+        liss.remove(atOffsets: hi)
     }
 }
 
@@ -48,4 +80,9 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+}
+
+
+#Preview {
+    Sheet(name: "Preview")
 }
