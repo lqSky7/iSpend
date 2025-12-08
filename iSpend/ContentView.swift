@@ -9,9 +9,12 @@ import SwiftUI
 
 
 struct Sheet : View {
+    let name: String
     var body : some View {
+        
+
         Text("Secpnd sheet")
-        Text("hiiiiiï")
+        Text("hiiiiiï \(name)")
     }
 }
 
@@ -31,7 +34,7 @@ struct ContentView: View {
                 showingSecondSheet.toggle()
             }
             .sheet(isPresented: $showingSecondSheet){
-                Sheet()
+                Sheet(name: "RAH")
             }
         }
         .padding()
