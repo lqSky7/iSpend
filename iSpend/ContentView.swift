@@ -9,12 +9,17 @@ import SwiftUI
 
 
 struct Sheet : View {
+    @Environment(\.dismiss) var diss
     let name: String
     var body : some View {
         
 
         Text("Secpnd sheet")
         Text("hiiiiiï \(name)")
+        Button("DISMISS", role: .destructive){
+            diss()
+        }.buttonStyle(.glassProminent)
+        .glassEffect(.regular.interactive())
     }
 }
 
