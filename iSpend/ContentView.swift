@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct Sheet : View {
-    @State private var counter = 1
+    @State private var counter = UserDefaults.standard.integer(forKey: "key1")
     @State private var liss: [Int] = []
     @Environment(\.dismiss) var diss
     let name: String
@@ -26,6 +26,7 @@ struct Sheet : View {
                 
                 Button("ADDRO", role: .confirm){
                     addro()
+                    UserDefaults.standard.set(counter, forKey: "key1")
                 }.buttonStyle(.glassProminent)
                     .glassEffect(.regular.interactive())
                 
