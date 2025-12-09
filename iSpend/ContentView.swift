@@ -20,6 +20,7 @@ class ExpenseArrayClass {
 }
 struct ContentView : View {
     @State private var expen = ExpenseArrayClass()
+    @State private var isEmpty : Bool = true
     var body: some View {
         NavigationStack{
             List {
@@ -30,13 +31,20 @@ struct ContentView : View {
             }.navigationTitle("iSpend")
              .navigationBarTitleDisplayMode(.automatic)
              .toolbar{
+                 ToolbarItem {
+                         if(!isEmpty){
+                             EditButton().glassEffect(.identity.interactive())
+                         }
+                     
+                 }
                  ToolbarItemGroup(placement: .bottomBar){
-                  
-                     EditButton().glassEffect(.identity.interactive())
                      Spacer()
                      Button("Add item", systemImage: "plus", role: .confirm){
                              let item = Exp(name: "test", price: 50)
+                         withAnimation{
                              expen.items.append(item)
+                             isEmpty = false
+                         }
                      }.buttonStyle(.glassProminent).tint(.orange).glassEffect(.identity.interactive())
                      
                  }
@@ -45,7 +53,7 @@ struct ContentView : View {
     }
     
     func removeItems(at idx : IndexSet){
-        expen.items.remove(atOffsets: idx)
+            expen.items.remove(atOffsets: idx)
     }
 }
 
