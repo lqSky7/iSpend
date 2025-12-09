@@ -10,7 +10,7 @@ import SwiftUI
 struct AddView: View {
     @Environment(\.dismiss) var dismiss
     @State private var name = ""
-    @State private var price = 0
+    @State private var price = 0.0
     @State private var type = "Useless"
 
     
@@ -22,13 +22,19 @@ struct AddView: View {
         NavigationStack{
 
             Form{
-                TextField("Enter expense", text: $name)
-                Picker("Pick your poison", selection: $type){
-                    ForEach(types, id: \.self){
-                        Text($0)
+                Section("Expense details"){
+                    TextField("Enter expense", text: $name)
+                    Picker("Pick your poison", selection: $type){
+                        ForEach(types, id: \.self){
+                            Text($0)
+                        }
                     }
                 }
-                TextField("Enter the amount", value: $price, format: .currency(code: "inr" )).keyboardType(.numberPad)
+                
+                Section("Enter or slide the amount"){
+                    TextField("Enter the amount", value: $price, format: .currency(code: "inr" )).keyboardType(.numberPad)
+                    Slider(value: $price, in: 0...200, step: 20)
+                }
             }.navigationTitle("Add new expense")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -47,7 +53,13 @@ struct AddView: View {
         }
     }
     func appendToExpenArray(){
+        if (name == ""){
+            name = "Unknow~"
+        }
+            
         let newObjectOfExp = Exp(name: name, price: price, type: type)
+
+            
         expenArray.items.append(newObjectOfExp)
     }
     

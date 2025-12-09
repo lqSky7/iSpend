@@ -10,7 +10,7 @@ import SwiftUI
 struct Exp : Identifiable, Encodable, Decodable{
     let id = UUID()
     let name: String
-    let price: Int
+    let price: Double
     let type: String
 }
 
@@ -44,23 +44,32 @@ struct ContentView : View {
         NavigationStack{
             List {
                 ForEach(expen.items, id: \.id)
-                {c in Text("\(c.name) \(c.type) \(c.price) rs.")}
+                { c in
+                    HStack{
+                        VStack(alignment: .leading){
+                            Text(c.name)
+                        }
+                        Spacer()
+                        Text(c.price, format: .currency(code: "inr"))
+                    }
+                }
                     .onDelete(perform: removeItems)
                     
                 
             }
-            VStack{
+            .overlay{
                     if(expen.items.isEmpty){
                         
                         Text("Tap the Plus icon to start")
                             .fontDesign(.rounded)
                             .fontWeight(.thin)
                             .foregroundStyle(.gray)
-                        Spacer()
+                            .multilineTextAlignment(.center)
+                            .padding()
+                            .allowsHitTesting(false)
                     }
-                
-                
             }
+            
            .navigationTitle("iSpend")
              .navigationBarTitleDisplayMode(.automatic)
              .toolbar{
