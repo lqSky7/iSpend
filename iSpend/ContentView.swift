@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct Exp {
-    let uuid = UUID()
+struct Exp : Identifiable{
+    let id = UUID()
     let name: String
     let price: Int
     let type: String = "Useless"
@@ -23,7 +23,7 @@ struct ContentView : View {
     var body: some View {
         NavigationStack{
             List {
-                ForEach(expen.items, id: \.uuid)
+                ForEach(expen.items, id: \.id)
                 {c in Text("\(c.name) \(c.type) \(c.price) rs.")}
                     .onDelete(perform: removeItems)
                     
