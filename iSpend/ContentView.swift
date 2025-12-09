@@ -11,7 +11,7 @@ struct Exp : Identifiable{
     let id = UUID()
     let name: String
     let price: Int
-    let type: String = "Useless"
+    let type: String
 }
 
 @Observable
@@ -20,7 +20,9 @@ class ExpenseArrayClass {
 }
 struct ContentView : View {
     @State private var expen = ExpenseArrayClass()
-    @State private var isEmpty : Bool = true
+    @State var isEmpty : Bool = true
+    @State private var showingAddExpenseSheet : Bool = false
+    
     var body: some View {
         NavigationStack{
             List {
@@ -28,6 +30,17 @@ struct ContentView : View {
                 {c in Text("\(c.name) \(c.type) \(c.price) rs.")}
                     .onDelete(perform: removeItems)
                     
+            }
+            
+            VStack{
+                if(isEmpty){
+                    Text("Tap the Plus icon to start")
+                        .fontDesign(.rounded)
+                        .fontWeight(.thin)
+                        .foregroundStyle(.gray)
+                    Spacer()
+                }
+                
             }.navigationTitle("iSpend")
              .navigationBarTitleDisplayMode(.automatic)
              .toolbar{
@@ -40,15 +53,17 @@ struct ContentView : View {
                  ToolbarItemGroup(placement: .bottomBar){
                      Spacer()
                      Button("Add item", systemImage: "plus", role: .confirm){
-                             let item = Exp(name: "test", price: 50)
+                         
                          withAnimation{
-                             expen.items.append(item)
-                             isEmpty = false
+                             showingAddExpenseSheet = true
                          }
                      }.buttonStyle(.glassProminent).tint(.orange).glassEffect(.identity.interactive())
                      
                  }
              }
+        }.sheet(isPresented: $showingAddExpenseSheet){
+            
+            AddView(isEmpty: $isEmpty,expenArray: expen) .presentationDetents([.height(600)])
         }
     }
     
