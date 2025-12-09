@@ -24,19 +24,27 @@ struct ContentView : View {
             List {
                 ForEach(expen.items, id: \.name)
                 {c in Text("\(c.name) \(c.type) \(c.price) rs.")}
+                    .onDelete(perform: removeItems)
+                    
             }.navigationTitle("iSpend")
              .navigationBarTitleDisplayMode(.automatic)
              .toolbar{
-                 
                  ToolbarItemGroup(placement: .bottomBar){
+                  
+                     EditButton().glassEffect(.identity.interactive())
                      Spacer()
                      Button("Add item", systemImage: "plus", role: .confirm){
                              let item = Exp(name: "test", price: 50)
                              expen.items.append(item)
-                     }.buttonStyle(.glassProminent).tint(.orange)
+                     }.buttonStyle(.glassProminent).tint(.orange).glassEffect(.identity.interactive())
+                     
                  }
              }
         }
+    }
+    
+    func removeItems(at idx : IndexSet){
+        expen.items.remove(atOffsets: idx)
     }
 }
 
