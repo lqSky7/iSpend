@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Exp : Identifiable, Encodable, Decodable{
-    let id = UUID()
+    var id = UUID()
     let name: String
     let price: Double
     let type: String
@@ -43,18 +43,44 @@ struct ContentView : View {
     var body: some View {
         NavigationStack{
             List {
-                ForEach(expen.items, id: \.id)
-                { c in
-                    HStack{
-                        VStack(alignment: .leading){
-                            Text(c.name)
+                let useLessItems = expen.items.filter { $0.type != "Useful" }
+                let usefulItems = expen.items.filter{ $0.type != "Useless" }
+                
+                if(!useLessItems.isEmpty) {
+                    Section("Useful"){
+                        
+                        
+                        ForEach(useLessItems, id: \.id)
+                        { c in
+                            HStack{
+                                VStack(alignment: .leading){
+                                    Text(c.name)
+                                }
+                                Spacer()
+                                Text(c.price, format: .currency(code: "inr"))
+                            }
                         }
-                        Spacer()
-                        Text(c.price, format: .currency(code: "inr"))
+                        .onDelete(perform: removeItems)
                     }
                 }
-                    .onDelete(perform: removeItems)
-                    
+                
+                if(!usefulItems.isEmpty) {
+                    Section("Useless"){
+                        
+                        
+                        ForEach(usefulItems, id: \.id)
+                        { c in
+                            HStack{
+                                VStack(alignment: .leading){
+                                    Text(c.name)
+                                }
+                                Spacer()
+                                Text(c.price, format: .currency(code: "inr"))
+                            }
+                        }
+                        .onDelete(perform: removeItems)
+                    }
+                }
                 
             }
             .overlay{
@@ -97,7 +123,9 @@ struct ContentView : View {
     }
     
     func removeItems(at idx : IndexSet){
+        withAnimation(){
             expen.items.remove(atOffsets: idx)
+        }
 
     }
 

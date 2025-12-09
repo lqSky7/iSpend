@@ -11,7 +11,7 @@ struct AddView: View {
     @Environment(\.dismiss) var dismiss
     @State private var name = ""
     @State private var price = 0.0
-    @State private var type = "Useless"
+    @State private var type = ""
 
     
     let types = ["Useful", "Useless"]
