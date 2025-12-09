@@ -12,7 +12,7 @@ struct AddView: View {
     @State private var name = ""
     @State private var price = 0
     @State private var type = "Useless"
-    @Binding var isEmpty : Bool
+
     
     let types = ["Useful", "Useless"]
     
@@ -30,13 +30,13 @@ struct AddView: View {
                 }
                 TextField("Enter the amount", value: $price, format: .currency(code: "inr" )).keyboardType(.numberPad)
             }.navigationTitle("Add new expense")
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem {
                         Button(role: .confirm) {
                             if(price != 0){
                                 appendToExpenArray()
                                 dismiss()
-                                isEmpty = false
                             }
                         } label: {
                             Label("Done", image: "tick")
@@ -54,5 +54,5 @@ struct AddView: View {
 }
 
 #Preview {
-    AddView(isEmpty: .constant(false),  expenArray: ExpenseArrayClass())
+    AddView(expenArray: ExpenseArrayClass())
 }

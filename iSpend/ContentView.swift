@@ -33,11 +33,11 @@ class ExpenseArrayClass {
                 items = []
             }
         }
+        
     }
 }
 struct ContentView : View {
     @State private var expen = ExpenseArrayClass()
-    @State var isEmptyStringShow : Bool = true
     @State private var showingAddExpenseSheet : Bool = false
     
     var body: some View {
@@ -47,22 +47,25 @@ struct ContentView : View {
                 {c in Text("\(c.name) \(c.type) \(c.price) rs.")}
                     .onDelete(perform: removeItems)
                     
-            }
-            
-            VStack{
-                if(isEmptyStringShow){
-                    Text("Tap the Plus icon to start")
-                        .fontDesign(.rounded)
-                        .fontWeight(.thin)
-                        .foregroundStyle(.gray)
-                    Spacer()
-                }
                 
-            }.navigationTitle("iSpend")
+            }
+            VStack{
+                    if(expen.items.isEmpty){
+                        
+                        Text("Tap the Plus icon to start")
+                            .fontDesign(.rounded)
+                            .fontWeight(.thin)
+                            .foregroundStyle(.gray)
+                        Spacer()
+                    }
+                
+                
+            }
+           .navigationTitle("iSpend")
              .navigationBarTitleDisplayMode(.automatic)
              .toolbar{
                  ToolbarItem {
-                         if(!isEmptyStringShow){
+                     if(!expen.items.isEmpty){
                              EditButton().glassEffect(.identity.interactive())
                          }
                      
@@ -80,16 +83,15 @@ struct ContentView : View {
              }
         }.sheet(isPresented: $showingAddExpenseSheet){
             
-            AddView(isEmpty: $isEmptyStringShow ,expenArray: expen) .presentationDetents([.height(600)])
+            AddView(expenArray: expen).presentationDetents([.height(600)])
         }
     }
     
     func removeItems(at idx : IndexSet){
             expen.items.remove(atOffsets: idx)
-        if(expen.items.isEmpty){
-            isEmptyStringShow = true
-        }
+
     }
+
 }
 
 #Preview {
