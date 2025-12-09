@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Exp : Identifiable{
+struct Exp : Identifiable, Encodable, Decodable{
     let id = UUID()
     let name: String
     let price: Int
@@ -16,11 +16,28 @@ struct Exp : Identifiable{
 
 @Observable
 class ExpenseArrayClass {
-    var items : [Exp] = []
+    var items : [Exp] = [] {
+        didSet{
+            if let encoded = try? JSONEncoder().encode(items) {
+                UserDefaults.standard.set(encoded, forKey: "STORE1")
+            }
+        }
+    }
+    init() {
+        if let savedItems = UserDefaults.standard.data(forKey: "STORE1"){
+            if let decodedSavedItems = try? JSONDecoder().decode([Exp].self, from: savedItems) {
+                items = decodedSavedItems
+                return
+            }
+            else {
+                items = []
+            }
+        }
+    }
 }
 struct ContentView : View {
     @State private var expen = ExpenseArrayClass()
-    @State var isEmpty : Bool = true
+    @State var isEmptyStringShow : Bool = true
     @State private var showingAddExpenseSheet : Bool = false
     
     var body: some View {
@@ -33,7 +50,7 @@ struct ContentView : View {
             }
             
             VStack{
-                if(isEmpty){
+                if(isEmptyStringShow){
                     Text("Tap the Plus icon to start")
                         .fontDesign(.rounded)
                         .fontWeight(.thin)
@@ -45,7 +62,7 @@ struct ContentView : View {
              .navigationBarTitleDisplayMode(.automatic)
              .toolbar{
                  ToolbarItem {
-                         if(!isEmpty){
+                         if(!isEmptyStringShow){
                              EditButton().glassEffect(.identity.interactive())
                          }
                      
@@ -63,12 +80,15 @@ struct ContentView : View {
              }
         }.sheet(isPresented: $showingAddExpenseSheet){
             
-            AddView(isEmpty: $isEmpty,expenArray: expen) .presentationDetents([.height(600)])
+            AddView(isEmpty: $isEmptyStringShow ,expenArray: expen) .presentationDetents([.height(600)])
         }
     }
     
     func removeItems(at idx : IndexSet){
             expen.items.remove(atOffsets: idx)
+        if(expen.items.isEmpty){
+            isEmptyStringShow = true
+        }
     }
 }
 
